@@ -45,7 +45,7 @@ class BrachioThread(threading.Thread):
 
         if (os.path.isfile(filename)) and (self.brachio is not None) and (not self.busy):
             self.busy = True
-            self.brachio.park(filename)
+            self.brachio.plot_file(filename)
             self.busy = False
 
     def box(self):
