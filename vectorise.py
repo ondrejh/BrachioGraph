@@ -3,20 +3,25 @@
 from PIL import Image, ImageOps
 from linedraw import makesvg, sortlines, hatch, getcontours, lines_to_file
 import click
+import os
 
 
 @click.command()
 @click.option('--input', '-i', required=True)
 @click.option('--output', '-o', required=True)
 @click.option('--svg', '-s', default=None)
-def click_app(input, output, svg):
-    vector_it(image_filename=input, draw_hatch=False, output_filename=output, svg_filename=svg)
+@click.option('--dir', '-d', default=None)
+def click_app(input, output, svg, dir):
+    vector_it(image_filename=input, draw_hatch=False, output_filename=output, svg_filename=svg, work_dir=dir)
 
 
-def vector_it(image_filename, resolution=1024, draw_hatch=True, hatch_size=16, draw_contours=True, contour_simplify=3,
-              output_filename=None, svg_filename=None):
+def vector_it(image_filename, resolution=1024, draw_hatch=True, hatch_size=16, draw_contours=True, contour_simplify=2,
+              output_filename=None, svg_filename=None, work_dir=None):
 
-    image = Image.open(image_filename)
+    ifn = image_filename
+    if work_dir is not None:
+        ifn = os.path.join(work_dir, image_filename)
+    image = Image.open(ifn)
     w, h = image.size
 
     # convert the image to grey scale
@@ -43,7 +48,10 @@ def vector_it(image_filename, resolution=1024, draw_hatch=True, hatch_size=16, d
         )
 
     if svg_filename is not None:
-        f = open(svg_filename, 'w')
+        sfn = svg_filename
+        if work_dir:
+            sfn = os.path.join(work_dir, svg_filename)
+        f = open(sfn, 'w')
         f.write(makesvg(lines))
         f.close()
 
@@ -55,7 +63,10 @@ def vector_it(image_filename, resolution=1024, draw_hatch=True, hatch_size=16, d
     print("done.")
 
     if output_filename is not None:
-        lines_to_file(lines, output_filename)
+        ofn = output_filename
+        if work_dir:
+            ofn = os.path.join(work_dir, output_filename)
+        lines_to_file(lines, ofn)
 
     return lines
 
