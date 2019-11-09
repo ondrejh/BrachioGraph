@@ -1,5 +1,7 @@
-from brachiograph import BrachioGraph as brachio
+#!/usr/bin/python3
+
 import click
+from brachiograph import BrachioGraph as brachio
 
 
 @click.command()
@@ -7,7 +9,10 @@ import click
 def draw(input):
 
     bg = brachio(8, 8, [-6, 5, 5, 13])
-    bg.plot_file(input)
+    try:
+        bg.plot_file(filename=input)
+    except KeyboardInterrupt:
+        bg.park()
 
 if __name__ == "__main__":
 

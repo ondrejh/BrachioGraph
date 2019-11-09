@@ -13,7 +13,7 @@ def click_app(input, output, svg):
     vector_it(image_filename=input, draw_hatch=False, output_filename=output, svg_filename=svg)
 
 
-def vector_it(image_filename, resolution=1024, draw_hatch=True, hatch_size=16, draw_contours=True, contour_simplify=1,
+def vector_it(image_filename, resolution=1024, draw_hatch=True, hatch_size=16, draw_contours=True, contour_simplify=3,
               output_filename=None, svg_filename=None):
 
     image = Image.open(image_filename)
