@@ -45,7 +45,10 @@ class BrachioThread(threading.Thread):
 
         if (os.path.isfile(filename)) and (self.brachio is not None) and (not self.busy):
             self.busy = True
-            self.brachio.plot_file(filename)
+            try:
+                self.brachio.plot_file(filename)
+            except KeyboardInterrupt:
+                pass
             self.busy = False
 
     def box(self):

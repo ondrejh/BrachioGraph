@@ -2,8 +2,11 @@
 
 from flask import Flask, render_template, send_file
 import os
+import glob
 
-dir = '/home/pi/brachio/templates/img/'
+#dir = '/home/pi/brachio/templates/img/'
+#if not os.path.isdir(dir):
+dir = 'templates/img/'
 
 webi = Flask(__name__)
 bg = None
@@ -40,13 +43,27 @@ def index(command=None,filename=None):
         elif command == 'quiet':
             bg.quiet()
     if filename is not None:
-        fn = os.path.join(dir, filename)
+        fn = os.path.abspath(os.path.join(dir, filename))
         bg.draw(fn)
+    images = glob.glob(os.path.join(dir, '*.svg'))
+    print(images)
     return render_template('index.html')
+
 
 @webi.route('/favicon.ico')
 def favicon():
     return send_file('templates/favicon.ico')
+
+
+@webi.route('/style.css')
+def style():
+    return send_file('templates/style.css')
+
+
+@webi.route('/img/<name>')
+def image(name):
+    return send_file('templates/img/{}'.format(name))
+
 
 if __name__ == "__main__":
     bg.start()
