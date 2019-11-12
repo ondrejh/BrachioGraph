@@ -4,8 +4,6 @@ from flask import Flask, render_template, send_file
 import os
 import glob
 
-#dir = '/home/pi/brachio/templates/img/'
-#if not os.path.isdir(dir):
 dir = 'templates/img/'
 
 webi = Flask(__name__)
@@ -46,8 +44,10 @@ def index(command=None,filename=None):
         fn = os.path.abspath(os.path.join(dir, filename))
         bg.draw(fn)
     images = glob.glob(os.path.join(dir, '*.svg'))
+    for i in range(len(images)):
+        images[i] = os.path.join('img', os.path.basename(images[i]))
     print(images)
-    return render_template('index.html')
+    return render_template('index.html', images=images)
 
 
 @webi.route('/favicon.ico')

@@ -25,8 +25,12 @@
             <li><a href='/draw=porshe.json'>Kresli porshe</a></li>
 		</ul>
 
-        <a href='/image/1'><img src="img/kytka.svg" alt="Kytka" /></a>
-
+        {% for image in images %}
+        <p class="foto">
+            <img class="fotoImg" src="{{ image }}"/>
+            <span class="name">Obrazek</span>
+        </p>
+        {% endfor %}
 	</div>
 
 </body>
