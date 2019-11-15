@@ -8,6 +8,7 @@ dir = 'templates/img/'
 
 webi = Flask(__name__)
 bg = None
+ptr = 0
 
 try:
     from brachio_thread import BrachioThread
@@ -32,7 +33,11 @@ except ImportError:
 @webi.route('/')
 @webi.route('/cmd=<command>')
 @webi.route('/draw=<filename>')
-def index(command=None,filename=None):
+def index(command=None):
+    images = glob.glob(os.path.join(dir, '*.svg'))
+    #print(images)
+    ptr_max = len(images) - 1
+    global ptr
     if command is not None:
         if command == 'park':
             bg.park()
@@ -40,14 +45,17 @@ def index(command=None,filename=None):
             bg.box()
         elif command == 'quiet':
             bg.quiet()
-    if filename is not None:
-        fn = os.path.abspath(os.path.join(dir, filename))
-        bg.draw(fn)
-    images = glob.glob(os.path.join(dir, '*.svg'))
-    for i in range(len(images)):
-        images[i] = os.path.join('img', os.path.basename(images[i]))
-    print(images)
-    return render_template('index.html', images=images)
+        elif command == 'next':
+            if ptr < ptr_max:
+                ptr += 1
+        elif command == 'prev':
+            if ptr > 0:
+                ptr -= 1
+        elif command == 'draw':
+            fn = os.path.abspath(os.path.splitext(images[ptr])[0]+'.json')
+            bg.draw(fn)
+    return render_template('index.html', image=os.path.join('img', os.path.basename(images[ptr])),
+                           cnt=ptr, cnt_of=ptr_max)
 
 
 @webi.route('/favicon.ico')
@@ -55,13 +63,27 @@ def favicon():
     return send_file('templates/favicon.ico')
 
 
-@webi.route('/style.css')
-def style():
-    return send_file('templates/style.css')
+@webi.route('/<name>.css')
+def style(name=None):
+    fpath = 'templates/{}.css'.format(name)
+    if os.path.isfile(fpath):
+        return send_file(fpath)
+
+
+@webi.route('/<name>.js')
+def js(name=None):
+    fpath = 'templates/{}.js'.format(name)
+    if os.path.isfile(fpath):
+        return send_file(fpath)
 
 
 @webi.route('/img/<name>')
 def image(name):
+    return send_file('templates/img/{}'.format(name))
+
+
+@webi.route('/images/<name>')
+def image_lb(name):
     return send_file('templates/img/{}'.format(name))
 
 

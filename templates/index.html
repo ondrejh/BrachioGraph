@@ -11,27 +11,20 @@
 </head>
 <body>
 	<div class="main">
+        <div>
+            <a class='button' href='/cmd=park'>Zaparkovat</a>
+            <a class='button' href='/cmd=quiet'>Vypnout</a>
+        </div>
+        <div>
+            <a class='button' href='/cmd=draw'>Kresli</a>
+        </div>
 
-		<ul>
-            <li><a href='/cmd=park'>Zaparkovat</a></li>
-            <li><a href='/cmd=quiet'>Vypnout</a></li>
-			<!--<li><a href='/cmd=box'>Box</a></li>-->
-        </ul>
+        <img src="{{ image }}" alt="{{ image }}">
 
-        <ul>
-            <li><a href='/draw=kytka.json'>Kresli kytku</a></li>
-            <li><a href='/draw=auto.json'>Kresli auto</a></li>
-            <li><a href='/draw=vcela.json'>Kresli včelu</a></li>
-            <li><a href='/draw=porshe.json'>Kresli porshe</a></li>
-		</ul>
-
-        {% for image in images %}
-        <p class="foto">
-            <img class="fotoImg" src="{{ image }}"/>
-            <span class="name">Obrazek</span>
-        </p>
-        {% endfor %}
+        <div>
+            <a class="button" href="/cmd=prev">Předchozí</a>
+            <a class="button" href="/cmd=next">Další</a>
+        </div>
 	</div>
-
 </body>
 </html>
